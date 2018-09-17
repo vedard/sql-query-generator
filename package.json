@@ -1,0 +1,29 @@
+{
+  "name": "sql-query-generator",
+  "version": "1.0.0",
+  "description": "A schemaless sql query builder.",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "npm run build && mocha"
+  },
+  "keywords": [
+    "sql",
+    "query",
+    "generator",
+    "builder",
+    "schemaless",
+    "generation",
+    "insert",
+    "update",
+    "generate"
+  ],
+  "author": "Vincent Bedard",
+  "license": "MIT",
+  "dependencies": {},
+  "devDependencies": {
+    "mocha": "^5.2.0",
+    "typescript": "^3.0.3"
+  }
+}
