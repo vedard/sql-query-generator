@@ -21,6 +21,11 @@
   ],
   "author": "Vincent Bedard",
   "license": "MIT",
+  "homepage": "https://github.com/vedard/sql-query-generator",
+  "repository": {
+    "type" : "git",
+    "url" : "https://github.com/vedard/sql-query-generator.git"
+  },
   "dependencies": {},
   "devDependencies": {
     "mocha": "^5.2.0",
