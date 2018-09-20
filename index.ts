@@ -83,7 +83,7 @@ export class Statement {
     }
 }
 
-export function select(table: string, columns: string[]) {
+export function select(table: string, columns: string | string[]) {
     if (!Array.isArray(columns)){
         columns = [columns];
     }
