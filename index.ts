@@ -48,7 +48,7 @@ export class Statement {
         return this;
     }
 
-    public groupby(columns: string[]) {
+    public groupby(columns: string | string[]) {
         if (!Array.isArray(columns)){
             columns = [columns];
         }
@@ -64,7 +64,7 @@ export class Statement {
         return this;
     }
 
-    public orderby(columns: string[]) {
+    public orderby(columns: string | string[]) {
         if (!Array.isArray(columns)){
             columns = [columns];
         }
