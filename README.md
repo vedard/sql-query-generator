@@ -4,7 +4,7 @@
 
 ```js
 // Import
-> const sql = require('./dist/index.js')
+> const sql = require('sql-query-generator')
 
 // Every function return a statement object containing the following information
 > sql.update("account", {email: "test@example.com", phone: "555-5555-5555"}).where({id: 1})
