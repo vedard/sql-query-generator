@@ -53,7 +53,7 @@ export class Statement {
             columns = [columns];
         }
 
-        this.text += ` GROUB BY ${columns.join(', ')}`;
+        this.text += ` GROUP BY ${columns.join(', ')}`;
         return this;
     }
 
