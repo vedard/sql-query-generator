@@ -37,6 +37,11 @@ describe('SqlQueryGenerator', function () {
             let query = sql.select('table', ['id', 'name']).orderby(["name"])
             assert.strictEqual(query.text, "SELECT id, name FROM table ORDER BY name");
         })
+
+        it('with a group by', function () {
+            let query = sql.select('table', ['id', 'name']).groupby(["name"])
+            assert.strictEqual(query.text, "SELECT id, name FROM table GROUP BY name");
+        })
     });
 
     describe('insert()', function () {
