@@ -43,9 +43,19 @@ describe('SqlQueryGenerator', function () {
             assert.strictEqual(query.text, "SELECT id, name FROM table ORDER BY name LIMIT 200");
         })
 
-        it('with a limit and offset', function () {
-            let query = sql.select('table', ['id', 'name']).orderby(["name"]).limit(200, 0)
-            assert.strictEqual(query.text, "SELECT id, name FROM table ORDER BY name LIMIT 200 OFFSET 0");
+        it('should thrown an error when limit is not a number', function () {
+            assert.throws(()=> sql.select('table', ['id', 'name']).orderby(["name"]).limit("1; DROP TABLE user; --"));
+            assert.throws(()=> sql.select('table', ['id', 'name']).orderby(["name"]).limit(10, "1; DROP TABLE user; --"));
+        })
+
+        it('with a limit and postgres offset', function () {
+            let query = sql.select('table', ['id', 'name']).orderby(["name"]).limit(200, 10)
+            assert.strictEqual(query.text, "SELECT id, name FROM table ORDER BY name LIMIT 200 OFFSET 10");
+        })
+
+        it('with a limit and mysql offset', function () {
+            let query = sql.select('table', ['id', 'name']).orderby(["name"]).limit(200, 10)
+            assert.strictEqual(query.text, "SELECT id, name FROM table ORDER BY name LIMIT 10, 200");
         })
 
         it('with a group by', function () {
