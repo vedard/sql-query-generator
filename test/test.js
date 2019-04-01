@@ -38,6 +38,16 @@ describe('SqlQueryGenerator', function () {
             assert.strictEqual(query.text, "SELECT id, name FROM table ORDER BY name");
         })
 
+        it('with a limit', function () {
+            let query = sql.select('table', ['id', 'name']).orderby(["name"]).limit(200)
+            assert.strictEqual(query.text, "SELECT id, name FROM table ORDER BY name LIMIT 200");
+        })
+
+        it('with a limit and offset', function () {
+            let query = sql.select('table', ['id', 'name']).orderby(["name"]).limit(200, 0)
+            assert.strictEqual(query.text, "SELECT id, name FROM table ORDER BY name LIMIT 200 OFFSET 0");
+        })
+
         it('with a group by', function () {
             let query = sql.select('table', ['id', 'name']).groupby(["name"])
             assert.strictEqual(query.text, "SELECT id, name FROM table GROUP BY name");

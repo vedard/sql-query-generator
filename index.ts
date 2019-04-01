@@ -73,6 +73,15 @@ export class Statement {
         return this;
     }
 
+    public limit(limit: number, offset: number) {
+        if (!Number.isInteger(offset)) {
+            this.text += ` LIMIT ${limit}`;
+        } else {
+            this.text += ` LIMIT ${limit} OFFSET ${offset}`;
+        }
+        return this;
+    }
+
     public returning(columns: string | string[]) {
         if (!Array.isArray(columns)){
             columns = [columns];
