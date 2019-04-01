@@ -84,3 +84,13 @@ Statement {
 > sql.select("account", "*").orderby(["email DESC", "phone"]).text
 'SELECT * FROM account ORDER BY email DESC, phone'
 ```
+
+### Limit
+
+``` js
+> sql.select("account", "*").orderby("email").limit(200).text
+'SELECT * FROM account ORDER BY email LIMIT 200'
+
+> sql.select("account", "*").orderby("email").limit(200, 200).text
+'SELECT * FROM account ORDER BY email LIMIT 200 OFFSET 200'
+```
