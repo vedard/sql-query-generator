@@ -49,8 +49,14 @@ describe('SqlQueryGenerator', function () {
         })
 
         it('with a group by', function () {
-            let query = sql.select('table', ['id', 'name']).groupby(["name"])
-            assert.strictEqual(query.text, "SELECT id, name FROM table GROUP BY name");
+            let query = sql.select('table', ['COUNT(id)', 'name']).groupby(["name"])
+            assert.strictEqual(query.text, "SELECT COUNT(id), name FROM table GROUP BY name");
+        })
+
+        it('with a group by + having + orderby', function () {
+            let query = sql.select('table', ['COUNT(id)', 'name']).groupby(["name"]).having({'COUNT(id)': 5}, '>').orderby('COUNT(id) DESC');
+            assert.strictEqual(query.text, "SELECT COUNT(id), name FROM table GROUP BY name HAVING COUNT(id) > $1 ORDER BY COUNT(id) DESC");
+            assert.deepStrictEqual(query.values, [5]);
         })
     });
 
