@@ -1,9 +1,24 @@
-export class Statement {
+export abstract class Statement {
     public operation: string = "";
     public table: string = "";
 
     public text: string = "";
     public values: any[] = [];
+    abstract dialect: Dialect;
+
+    public static fromFactory(dialect: Dialect) {
+        switch (dialect) {
+            case "mysql":
+                return new MysqlStatement();
+                
+            case "mssql":
+                return new MssqlStatement();
+                
+            default:
+            case "postgres":
+                return new PostgresStatement();
+        }
+    }
 
     public join(table: string, fields: Object, type: string = "INNER") {
         let expression = Object.entries(fields).map((v, k) => `${v[0]} = ${v[1]}`);
@@ -73,15 +88,6 @@ export class Statement {
         return this;
     }
 
-    public limit(limit: number, offset: number) {
-        if (!Number.isInteger(offset)) {
-            this.text += ` LIMIT ${limit}`;
-        } else {
-            this.text += ` LIMIT ${limit} OFFSET ${offset}`;
-        }
-        return this;
-    }
-
     public returning(columns: string | string[]) {
         if (!Array.isArray(columns)){
             columns = [columns];
@@ -90,46 +96,56 @@ export class Statement {
         this.text += ` RETURNING ${columns.join(', ')}`;
         return this;
     }
+
+    abstract limit(limit: number, offset: number): Statement;
 }
 
-export function select(table: string, columns: string | string[]) {
-    if (!Array.isArray(columns)){
-        columns = [columns];
+
+export class PostgresStatement extends Statement {
+    dialect: Dialect = "postgres";
+
+    limit(limit: number, offset: number | undefined): Statement {
+        if (!Number.isInteger(limit))
+            throw new Error("Limit should be a number");
+            
+        if (offset != undefined && !Number.isInteger(offset))
+            throw new Error("Offset should be a number or undefined");
+
+        this.text += ` LIMIT ${limit}`;
+
+        if (offset){
+            this.text += ` OFFSET ${offset}`;
+        }
+
+        return this;
     }
-
-    let statement = new Statement();
-    statement.operation = "SELECT";
-    statement.table = table;
-    statement.text = `SELECT ${columns.join(', ')} FROM ${table}`;
-    return statement;
 }
 
+export class MysqlStatement extends Statement {
+    dialect: Dialect = "mysql";
 
-export function insert(table: string, fields: Object) {
-    let columns = Object.keys(fields)
-    let values = Object.values(fields).map((v, k) => `$${k + 1}`);
-    let statement = new Statement();
-    statement.operation = "INSERT";
-    statement.table = table;
-    statement.values = Object.values(fields);
-    statement.text = `INSERT INTO ${table} (${columns.join(", ")}) VALUES (${values.join(", ")})`;
-    return statement;
+    limit(limit: number, offset: number): Statement {
+        if (!Number.isInteger(limit))
+            throw new Error("Limit should be a number");
+            
+        if (offset != undefined && !Number.isInteger(offset))
+            throw new Error("Offset should be a number or undefined");
+
+
+        if (offset){
+            this.text += ` LIMIT ${offset}, ${limit}`;
+        } else {
+            this.text += ` LIMIT ${limit}`;
+        }
+
+        return this;
+    }
 }
 
-export function update(table: string, fields: Object) {
-    let columns = Object.keys(fields).map((v, k) => `${v} = $${k + 1}`);
-    let statement = new Statement();
-    statement.operation = "UPDATE";
-    statement.table = table;
-    statement.values = Object.values(fields);
-    statement.text = `UPDATE ${table} SET ${columns.join(", ")}`;
-    return statement;
-}
+export class MssqlStatement extends Statement {
+    dialect: Dialect = "mssql";
 
-export function deletes(table: string): Statement {
-    let statement = new Statement();
-    statement.operation = "DELETE";
-    statement.table = table;
-    statement.text = `DELETE FROM ${table}`;
-    return statement;
+    limit(limit: number, offset: number): Statement {
+       throw new Error("Not Implemented");
+    }
 }

@@ -1,0 +1,1 @@
+type Dialect = "postgres" | "mysql" | "mssql";

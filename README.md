@@ -6,6 +6,9 @@
 // Import
 > const sql = require('sql-query-generator')
 
+// Choose your dialect: postgres (default), mysql, mssql
+sql.use("postgres"); 
+
 // Every function return a statement object containing the following information
 > sql.update("account", {email: "test@example.com", phone: "555-5555-5555"}).where({id: 1})
 Statement {
