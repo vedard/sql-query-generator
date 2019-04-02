@@ -2,6 +2,26 @@ const assert = require('assert');
 const sql = require('../dist');
 
 describe('SqlQueryGenerator', function () {
+    describe('use()', function (){
+        it('postgres dialect', function () {
+            sql.use('postgres');
+            let query = sql.select('table', ['id']);
+            assert.strictEqual(query.dialect, "postgres")
+        });
+
+        it('mysql dialect', function () {
+            sql.use('mysql');
+            let query = sql.select('table', ['id']);
+            assert.strictEqual(query.dialect, "mysql")
+        });
+
+        it('mssql dialect', function () {
+            sql.use('mssql');
+            let query = sql.select('table', ['id']);
+            assert.strictEqual(query.dialect, "mssql")
+        });
+    });
+
     describe('select()', function () {
         it('1 field', function () {
             let query = sql.select('table', ['id']);
@@ -36,6 +56,34 @@ describe('SqlQueryGenerator', function () {
         it('with a order by', function () {
             let query = sql.select('table', ['id', 'name']).orderby(["name"])
             assert.strictEqual(query.text, "SELECT id, name FROM table ORDER BY name");
+        })
+
+        it('with a limit', function () {
+            sql.use('postgres');
+            let query = sql.select('table', ['id', 'name']).orderby(["name"]).limit(200)
+            assert.strictEqual(query.text, "SELECT id, name FROM table ORDER BY name LIMIT 200");
+        })
+
+        it('should thrown an error when limit is not a number', function () {
+            assert.throws(()=> sql.select('table', ['id', 'name']).orderby(["name"]).limit("1; DROP TABLE user; --"));
+            assert.throws(()=> sql.select('table', ['id', 'name']).orderby(["name"]).limit(10, "1; DROP TABLE user; --"));
+        })
+
+        it('with a limit and postgres offset', function () {
+            sql.use("postgres");
+            let query = sql.select('table', ['id', 'name']).orderby(["name"]).limit(200, 10)
+            assert.strictEqual(query.text, "SELECT id, name FROM table ORDER BY name LIMIT 200 OFFSET 10");
+        })
+
+        it('with a limit and mysql offset', function () {
+            sql.use("mysql");
+            let query = sql.select('table', ['id', 'name']).orderby(["name"]).limit(200, 10)
+            assert.strictEqual(query.text, "SELECT id, name FROM table ORDER BY name LIMIT 10, 200");
+        })
+
+        it('should throw an error when limit is use with mssql', function () {
+            sql.use("mssql");
+            assert.throws(()=> sql.select('table', ['id', 'name']).orderby(["name"]).limit(200, 10));
         })
 
         it('with a group by', function () {

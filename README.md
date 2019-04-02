@@ -6,6 +6,9 @@
 // Import
 > const sql = require('sql-query-generator')
 
+// Choose your dialect: postgres (default), mysql, mssql
+sql.use("postgres"); 
+
 // Every function return a statement object containing the following information
 > sql.update("account", {email: "test@example.com", phone: "555-5555-5555"}).where({id: 1})
 Statement {
@@ -83,4 +86,14 @@ Statement {
 
 > sql.select("account", "*").orderby(["email DESC", "phone"]).text
 'SELECT * FROM account ORDER BY email DESC, phone'
+```
+
+### Limit
+
+``` js
+> sql.select("account", "*").orderby("email").limit(200).text
+'SELECT * FROM account ORDER BY email LIMIT 200'
+
+> sql.select("account", "*").orderby("email").limit(200, 200).text
+'SELECT * FROM account ORDER BY email LIMIT 200 OFFSET 200'
 ```
