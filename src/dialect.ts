@@ -1,1 +1,1 @@
-type Dialect = "postgres" | "mysql" | "mssql";
+export type Dialect = "postgres" | "mysql" | "mssql";

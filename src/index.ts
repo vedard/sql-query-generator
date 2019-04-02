@@ -1,4 +1,5 @@
 import { Statement } from "./statement";
+import { Dialect } from "./dialect";
 
 let current_dialect: Dialect = "postgres";
 

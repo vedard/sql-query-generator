@@ -1,3 +1,5 @@
+import { Dialect } from "./dialect";
+
 export abstract class Statement {
     public operation: string = "";
     public table: string = "";
