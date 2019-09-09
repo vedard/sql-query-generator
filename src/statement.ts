@@ -28,7 +28,12 @@ export abstract class Statement {
         return this;
     }
 
-    public where(fields: Object, operator: string = '=', separator: string = 'AND') {
+    public where(fields: String | Object, operator: string = '=', separator: string = 'AND') {
+        if (typeof(fields) == "string") {
+            this.text += ` WHERE ${fields}`;
+            return this;
+        }
+
         let expression = Object.keys(fields).map((v, k) => `${v} ${operator} $${k + this.values.length + 1}`);
         this.values = this.values.concat(Object.values(fields));
         
@@ -41,7 +46,12 @@ export abstract class Statement {
         return this;
     }
 
-    public and(fields: Object, operator: string = '=', separator: string = 'AND'){
+    public and(fields: String | Object, operator: string = '=', separator: string = 'AND'){
+        if (typeof(fields) == "string") {
+            this.text += ` AND ${fields}`;
+            return this;
+        }
+
         let expression = Object.keys(fields).map((v, k) => `${v} ${operator} $${k + this.values.length + 1}`);
         this.values = this.values.concat(Object.values(fields));
         if (expression.length > 1){
@@ -54,6 +64,11 @@ export abstract class Statement {
     }
 
     public or(fields: Object, operator: string = '=', separator: string = 'AND'){
+        if (typeof(fields) == "string") {
+            this.text += ` OR ${fields}`;
+            return this;
+        }
+
         let expression = Object.keys(fields).map((v, k) => `${v} ${operator} $${k + this.values.length + 1}`);
         this.values = this.values.concat(Object.values(fields));
         if (expression.length > 1){

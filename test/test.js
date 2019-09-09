@@ -47,10 +47,16 @@ describe('SqlQueryGenerator', function () {
             assert.deepStrictEqual(query.values, []);
         })
 
-        it('with a where', function () {
+        it('with a where as object', function () {
             let query = sql.select('table', ['id', 'name']).where({ id: 2 });
             assert.strictEqual(query.text, "SELECT id, name FROM table WHERE id = $1");
             assert.deepStrictEqual(query.values, [2]);
+        })
+
+        it('with a where as string', function () {
+            let query = sql.select('table', ['id', 'name']).where("id IS NULL").and("name IS NOT NULL")
+            assert.strictEqual(query.text, "SELECT id, name FROM table WHERE id IS NULL AND name IS NOT NULL");
+            assert.deepStrictEqual(query.values, []);
         })
 
         it('with a order by', function () {
