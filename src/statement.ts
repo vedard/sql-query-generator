@@ -99,6 +99,10 @@ export abstract class Statement {
         return this;
     }
 
+    public toString(): string {
+    	return this.text;
+    }
+
     abstract limit(limit: number, offset: number): Statement;
 }
 
