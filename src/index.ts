@@ -15,7 +15,7 @@ export function select(table: string, columns: string | string[]) {
     let statement = Statement.fromFactory(current_dialect);
     statement.operation = "SELECT";
     statement.table = table;
-    statement.text = `SELECT ${columns.join(', ')} FROM ${table}`;
+    statement.text = `SELECT ${columns.join(', ')} FROM "${table}"`;
     return statement;
 }
 
@@ -27,7 +27,7 @@ export function insert(table: string, fields: Object) {
     statement.operation = "INSERT";
     statement.table = table;
     statement.values = Object.values(fields);
-    statement.text = `INSERT INTO ${table} (${columns.join(", ")}) VALUES (${values.join(", ")})`;
+    statement.text = `INSERT INTO "${table}" (${columns.join(", ")}) VALUES (${values.join(", ")})`;
     return statement;
 }
 
@@ -37,7 +37,7 @@ export function update(table: string, fields: Object) {
     statement.operation = "UPDATE";
     statement.table = table;
     statement.values = Object.values(fields);
-    statement.text = `UPDATE ${table} SET ${columns.join(", ")}`;
+    statement.text = `UPDATE "${table}" SET ${columns.join(", ")}`;
     return statement;
 }
 
@@ -45,6 +45,6 @@ export function deletes(table: string): Statement {
     let statement = Statement.fromFactory(current_dialect);
     statement.operation = "DELETE";
     statement.table = table;
-    statement.text = `DELETE FROM ${table}`;
+    statement.text = `DELETE FROM "${table}"`;
     return statement;
 }
